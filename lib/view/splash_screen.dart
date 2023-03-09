@@ -1,6 +1,6 @@
 import 'package:blog_app/view/view.dart';
 import 'package:flutter/material.dart';
-import 'dart:math' as math;
+
 import 'dart:async';
 
 class SplashScreen extends StatefulWidget {
@@ -38,33 +38,26 @@ class _SplashScreenState extends State<SplashScreen>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            AnimatedBuilder(
-                animation: _controller,
-                child: const Center(
-                  child: Image(
-                      height: 200,
-                      width: 200,
-                      fit: BoxFit.cover,
-                      image: AssetImage(
-                        "assets/images/blog.png",
-                      )),
-                ),
-                builder: (BuildContext context, Widget? child) {
-                  return Transform.rotate(
-                    angle: _controller.value * 2.0 * math.pi,
-                    child: child,
-                  );
-                }),
-            const SizedBox(
+          children: const [
+            Image(
+                height: 200,
+                width: 200,
+                fit: BoxFit.cover,
+                image: AssetImage(
+                  "assets/images/blog.png",
+                )),
+            SizedBox(
               height: 30,
             ),
-            const Align(
+            Align(
                 alignment: Alignment.center,
                 child: Text(
                   "Blog App",
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey),
                 )),
           ],
         ),

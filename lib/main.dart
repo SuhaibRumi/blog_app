@@ -2,6 +2,8 @@ import 'package:blog_app/view/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
+import 'utils/themes/my_theme.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -17,7 +19,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Blog app',
-      theme: ThemeData.dark(),
+      themeMode: ThemeMode.light,
+      theme: MyTheme.lightTheme(context),
       home: const SplashScreen(),
     );
   }
