@@ -3,13 +3,11 @@ import 'package:flutter/material.dart';
 class MyTextField extends StatelessWidget {
   const MyTextField({
     Key? key,
-   
     required this.lableText,
     required this.controller,
   }) : super(key: key);
   final String lableText;
 
- 
   final TextEditingController controller;
 
   @override
@@ -20,14 +18,14 @@ class MyTextField extends StatelessWidget {
         keyboardType: TextInputType.text,
         controller: controller,
         decoration: InputDecoration(
-          border: const OutlineInputBorder(),
+          border: const OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(15))),
           labelText: lableText,
           labelStyle: const TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.normal,
           ),
         ),
-        
       ),
     );
   }

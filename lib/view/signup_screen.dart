@@ -29,6 +29,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
     _emailController.dispose();
   }
 
+  void visibility() {
+    setState(() {
+      _obscureText = !_obscureText;
+    });
+  }
+
   void signUp() {
     setState(() {
       loading = true;
@@ -77,7 +83,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   "Sign Up",
                   style: TextStyle(
                       fontSize: 28,
-                      color: Colors.grey[600],
+                      color: Colors.grey[800],
                       fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(
@@ -124,9 +130,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           decoration: InputDecoration(
                               suffixIcon: GestureDetector(
                                 onTap: () {
-                                  setState(() {
-                                    _obscureText = !_obscureText;
-                                  });
+                                  visibility();
                                 },
                                 child: Icon(_obscureText
                                     ? Icons.visibility

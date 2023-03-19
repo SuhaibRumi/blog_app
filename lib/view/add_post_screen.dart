@@ -1,10 +1,11 @@
 import 'dart:io';
-
 import 'package:blog_app/widgets/drawer.dart';
 import 'package:blog_app/widgets/resuseable_textfield.dart';
 import 'package:blog_app/widgets/reuseable_button.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+
 
 class AddPostScreen extends StatefulWidget {
   const AddPostScreen({super.key});
@@ -16,6 +17,10 @@ class AddPostScreen extends StatefulWidget {
 class _AddPostScreenState extends State<AddPostScreen> {
   TextEditingController titleController = TextEditingController();
   TextEditingController descController = TextEditingController();
+
+  final postRef = FirebaseDatabase.instance.ref().child("Posts");
+  
+
   File? _image;
   final picker = ImagePicker();
 
@@ -39,6 +44,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
         print("no image selected yet");
       }
     });
+    
   }
 
   @override
@@ -79,7 +85,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                             height: 100,
                             width: 100,
                             child: const Icon(
-                              Icons.camera_alt,
+                              Icons.camera_enhance,
                               size: 40,
                             ),
                           ),
@@ -105,7 +111,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
     );
   }
 
-// Function showDialog
+//* Function showDialog
   void dialog(context) {
     showDialog(
         context: context,
@@ -123,7 +129,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                       Navigator.pop(context);
                     },
                     child: const ListTile(
-                      leading: Icon(Icons.camera),
+                      leading: Icon(Icons.camera_alt),
                       title: Text("Camera"),
                     ),
                   ),

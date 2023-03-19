@@ -20,7 +20,7 @@ class _LogInScreenState extends State<LogInScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  bool _showPassword = true;
+  bool _obscureText = true;
 
   @override
   void dispose() {
@@ -31,7 +31,7 @@ class _LogInScreenState extends State<LogInScreen> {
 
   void visibility() {
     setState(() {
-      _showPassword = !_showPassword;
+      _obscureText = !_obscureText;
     });
   }
 
@@ -87,7 +87,7 @@ class _LogInScreenState extends State<LogInScreen> {
                     "Welcome",
                     style: TextStyle(
                         fontSize: 28,
-                        color: Colors.grey[600],
+                        color: Colors.grey[800],
                         fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(
@@ -120,17 +120,17 @@ class _LogInScreenState extends State<LogInScreen> {
                           // TextField for password..//
                           TextFormField(
                             controller: _passwordController,
-                            obscureText: _showPassword,
+                            obscureText: _obscureText,
                             obscuringCharacter: "*",
                             decoration: InputDecoration(
                                 suffixIcon: InkWell(
-                                  onTap: visibility,
+                                  onTap: () {
+                                    visibility();
+                                  },
                                   child: Icon(
-                                    _showPassword
+                                    _obscureText
                                         ? Icons.visibility
                                         : Icons.visibility_off,
-                                    size: 15.0,
-                                    color: Colors.black,
                                   ),
                                 ),
                                 hintText: "Enter Your Password",
