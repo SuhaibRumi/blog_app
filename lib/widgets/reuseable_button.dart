@@ -31,8 +31,7 @@ class RoundedButton extends StatelessWidget {
               : Text(
                   title,
                   style: const TextStyle(
-                    
-                      fontSize: 18,
+                      fontSize: 16,
                       fontWeight: FontWeight.w600,
                       fontFamily: "Merriweather & Merriweather Sans"),
                   textAlign: TextAlign.center,

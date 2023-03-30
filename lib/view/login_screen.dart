@@ -1,3 +1,4 @@
+import 'package:blog_app/view/forget_password.dart';
 import 'package:blog_app/view/home_screen.dart';
 import 'package:blog_app/view/login_with_phone.dart';
 import 'package:blog_app/view/signup_screen.dart';
@@ -71,8 +72,6 @@ class _LogInScreenState extends State<LogInScreen> {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 30.0),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Image.asset(
                     "assets/images/login.png",
@@ -144,8 +143,22 @@ class _LogInScreenState extends State<LogInScreen> {
                               return null;
                             },
                           ),
-                          const SizedBox(
-                            height: 30,
+
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (_) =>
+                                              const RestPassword()));
+                                },
+                                child: const Text("Forget Password ?",
+                                    style: TextStyle(fontSize: 14)),
+                              ),
+                            ],
                           ),
 
                           // reuseableButton//

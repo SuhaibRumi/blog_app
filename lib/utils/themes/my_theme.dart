@@ -3,13 +3,11 @@ import 'package:flutter/material.dart';
 class MyTheme {
   static ThemeData lightTheme(BuildContext context) => ThemeData(
       primarySwatch: Colors.deepPurple,
-      primaryColor: Colors.white,
-      appBarTheme: AppBarTheme(
+      primaryColor: Colors.grey,
+      appBarTheme: const AppBarTheme(
         color: Colors.blue,
-        elevation: 1.0,
-        iconTheme: const IconThemeData(color: Colors.black),
-        toolbarTextStyle: Theme.of(context).textTheme.bodyText2,
-        titleTextStyle: Theme.of(context).textTheme.headline6,
+        elevation: 0,
+        iconTheme: IconThemeData(color: Colors.white),
       ));
 
   static ThemeData darkTheme(BuildContext context) => ThemeData(
