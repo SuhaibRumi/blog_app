@@ -1,11 +1,11 @@
 import 'dart:io';
+import 'package:blog_app/utils/firebase/error.dart';
 import 'package:blog_app/widgets/drawer.dart';
 import 'package:blog_app/widgets/resuseable_textfield.dart';
 import 'package:blog_app/widgets/reuseable_button.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-
 
 class AddPostScreen extends StatefulWidget {
   const AddPostScreen({super.key});
@@ -18,9 +18,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
   TextEditingController titleController = TextEditingController();
   TextEditingController descController = TextEditingController();
 
-  final postRef = FirebaseDatabase.instance.ref().child("Posts");
-  
-
+  bool showSpiner = false;
   File? _image;
   final picker = ImagePicker();
 
@@ -44,7 +42,6 @@ class _AddPostScreenState extends State<AddPostScreen> {
         print("no image selected yet");
       }
     });
-    
   }
 
   @override
@@ -103,7 +100,19 @@ class _AddPostScreenState extends State<AddPostScreen> {
               const SizedBox(
                 height: 70,
               ),
-              RoundedButton(title: "Upload", onTap: () {})
+              RoundedButton(
+                  title: "Upload",
+                  onTap: () async {
+                    setState(() {
+                      showSpiner = true;
+                    });
+                    try {} catch (e) {
+                       setState(() {
+                      showSpiner = false;
+                    });
+                      toastMessage(e.toString());
+                    }
+                  })
             ],
           ),
         ),
