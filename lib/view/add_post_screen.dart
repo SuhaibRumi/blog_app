@@ -3,11 +3,14 @@ import 'package:blog_app/utils/firebase/error.dart';
 import 'package:blog_app/widgets/drawer.dart';
 import 'package:blog_app/widgets/resuseable_textfield.dart';
 import 'package:blog_app/widgets/reuseable_button.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storge;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
-class AddPostScreen extends StatefulWidget {
+class AddPostScreen extends StatefulWidget { 
   const AddPostScreen({super.key});
 
   @override
@@ -15,6 +18,13 @@ class AddPostScreen extends StatefulWidget {
 }
 
 class _AddPostScreenState extends State<AddPostScreen> {
+  bool showSpinner = false;
+  final postRef = FirebaseDatabase.instance.ref().child("Posts");
+  firebase_storge.FirebaseStorage storage =
+      firebase_storge.FirebaseStorage.instance;
+
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
   TextEditingController titleController = TextEditingController();
   TextEditingController descController = TextEditingController();
 
@@ -46,74 +56,111 @@ class _AddPostScreenState extends State<AddPostScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text("Uplod Blogs"),
-      ),
-      drawer: const MyDrawer(),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15),
-          child: Column(
-            children: [
-              InkWell(
-                onTap: () {
-                  dialog(context);
-                },
-                child: Center(
-                  child: SizedBox(
-                    height: MediaQuery.of(context).size.height * .2,
-                    width: MediaQuery.of(context).size.width * 1,
-                    child: _image != null
-                        ? ClipRect(
-                            child: Image.file(
-                              _image!.absolute,
+    return ModalProgressHUD(
+      inAsyncCall: showSpiner,
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: const Text("Uplod Blogs"),
+        ),
+        drawer: const MyDrawer(),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15),
+            child: Column(
+              children: [
+                InkWell(
+                  onTap: () {
+                    dialog(context);
+                  },
+                  child: Center(
+                    child: SizedBox(
+                      height: MediaQuery.of(context).size.height * .2,
+                      width: MediaQuery.of(context).size.width * 1,
+                      child: _image != null
+                          ? ClipRect(
+                              child: Image.file(
+                                _image!.absolute,
+                                height: 100,
+                                width: 100,
+                                fit: BoxFit.cover,
+                              ),
+                            )
+                          : Container(
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade200,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
                               height: 100,
                               width: 100,
-                              fit: BoxFit.cover,
+                              child: const Icon(
+                                Icons.camera_enhance,
+                                size: 40,
+                              ),
                             ),
-                          )
-                        : Container(
-                            decoration: BoxDecoration(
-                              color: Colors.grey.shade200,
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            height: 100,
-                            width: 100,
-                            child: const Icon(
-                              Icons.camera_enhance,
-                              size: 40,
-                            ),
-                          ),
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(
-                height: 50,
-              ),
-              MyTextField(lableText: "Title", controller: titleController),
-              const SizedBox(
-                height: 30,
-              ),
-              MyTextField(lableText: "Description", controller: descController),
-              const SizedBox(
-                height: 70,
-              ),
-              RoundedButton(
-                  title: "Upload",
-                  onTap: () async {
-                    setState(() {
-                      showSpiner = true;
-                    });
-                    try {} catch (e) {
-                       setState(() {
-                      showSpiner = false;
-                    });
-                      toastMessage(e.toString());
-                    }
-                  })
-            ],
+                const SizedBox(
+                  height: 50,
+                ),
+                MyTextField(lableText: "Title", controller: titleController),
+                const SizedBox(
+                  height: 30,
+                ),
+                MyTextField(
+                    lableText: "Description", controller: descController),
+                const SizedBox(
+                  height: 70,
+                ),
+                RoundedButton(
+                    title: "Upload",
+                    onTap: () async {
+                      setState(() {
+                        showSpiner = true;
+                      });
+                      try {
+                        int date = DateTime.now().microsecondsSinceEpoch;
+
+                        firebase_storge.Reference ref = firebase_storge
+                            .FirebaseStorage.instance
+                            .ref("/blogapp$date");
+
+                        firebase_storge.UploadTask uploadTask =
+                            ref.putFile(_image!.absolute);
+                        await Future.value(uploadTask);
+                        var newUrl = await ref.getDownloadURL();
+
+                        final User? user = _auth.currentUser;
+
+                        postRef.child('Post List').child(date.toString()).set({
+                          'pId': date.toString(),
+                          'pImage': newUrl.toString(),
+                          'pTime': date.toString(),
+                          'pTitle': titleController.text.toString(),
+                          'pDescripton': descController.text.toString(),
+                          'pEmail': user!.email.toString(),
+                          'uid': user.uid.toString(),
+                        }).then((value) {
+                          toastMessage("Post Published");
+                          setState(() {
+                            showSpiner = false;
+                          });
+                        }).onError((error, stackTrace) {
+                          toastMessage(error.toString());
+                          setState(() {
+                            showSpiner = false;
+                          });
+                        });
+                      } catch (e) {
+                        setState(() {
+                          showSpiner = false;
+                        });
+                        toastMessage(e.toString());
+                      }
+                    })
+              ],
+            ),
           ),
         ),
       ),
